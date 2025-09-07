@@ -7,34 +7,52 @@ const ChatAI = () => {
   >([]);
   const [input, setInput] = useState("");
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return;
 
-    // 👤 Agregar mensaje del usuario
+    // Agregar mensaje del usuario
     setMessages((prev) => [...prev, { sender: "user", text: input }]);
+    setInput("");
 
-    // 🧠 Aquí luego conectas tu API (Groq, OpenAI, etc.)
-    setTimeout(() => {
+    try {
+      
+      // Llamada al servidor Express que hace de proxy a GroqCloud
+      const res = await fetch("http://localhost:3001/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input }),
+      });
+
+      const data = await res.json();
+
+      // Validar la respuesta
+      const aiText = data.text || "❌ No se pudo obtener respuesta de la IA";
+
+      setMessages((prev) => [...prev, { sender: "ai", text: aiText }]);
+    } catch (error) {
+      console.error(error);
       setMessages((prev) => [
         ...prev,
-        { sender: "ai", text: "🤖 Esta es una respuesta simulada de la IA." },
+        { sender: "ai", text: "❌ Error con la IA" },
       ]);
-    }, 800);
-
-    setInput("");
+    }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 overflow-hidden" style={{ backgroundColor: "#09090c" }}>
-      {/* El cubo de chat */}
+    <div
+      className="flex justify-center items-center min-h-screen"
+      style={{ backgroundColor: "#09090c" }}
+    >
+      {/* Cubo de chat */}
       <div className="w-full max-w-md flex flex-col bg-white border border-gray-300 rounded-xl shadow-lg overflow-hidden">
-        {/* Header */}
         <header className="p-4 border-b border-gray-200 font-bold text-lg text-center bg-gray-50">
           Chat con IA
         </header>
 
-        {/* Área de mensajes */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50" style={{ maxHeight: "500px", overflowY: "auto" }}>
+        <div
+          className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
+          style={{ maxHeight: "500px" }}
+        >
           {messages.map((msg, i) => (
             <div
               key={i}
@@ -55,10 +73,10 @@ const ChatAI = () => {
           ))}
         </div>
 
-        {/* Input dentro del "cubo" */}
         <div className="p-3 border-t border-gray-200 bg-white flex space-x-2">
           <input
             className="flex-1 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+            style={{ color: "#000000" }}
             placeholder="Escribe tu mensaje..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -75,5 +93,8 @@ const ChatAI = () => {
     </div>
   );
 };
-//#09090c
+
 export default ChatAI;
+
+
+
