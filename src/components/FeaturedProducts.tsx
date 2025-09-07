@@ -1,6 +1,7 @@
 import ProductCard from "./ProductCard";
 import dragonImage from "@/assets/dragon-character.jpg";
 import robotImage from "@/assets/robot-warrior.jpg";
+import create from "@/assets/CreateIMG.webp";
 import collectionImage from "@/assets/character-collection.jpg";
 
 const FeaturedProducts = () => {
@@ -25,6 +26,13 @@ const FeaturedProducts = () => {
       image: collectionImage,
       rating: 5,
       reviews: 203
+    },
+    {
+      name: "Costumize your 3D Character",
+      price: 1,
+      image: create,
+      rating: 5,
+      reviews: 666
     }
   ];
 

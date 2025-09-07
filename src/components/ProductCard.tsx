@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   name: string;
@@ -11,6 +12,13 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ name, price, image, rating, reviews }: ProductCardProps) => {
+
+  const navigate = useNavigate();
+
+  const handleRedirect = () => {
+    navigate("/create-3d"); // 👈 tu ruta configurada en main.tsx
+  };
+
   return (
     <Card className="group cursor-pointer transition-all duration-300 hover:shadow-glow-card hover:scale-105 bg-gradient-card border-border/50">
       <CardContent className="p-0">
@@ -46,7 +54,7 @@ const ProductCard = ({ name, price, image, rating, reviews }: ProductCardProps) 
               ${price}
             </span>
             
-            <Button variant="glow" size="sm">
+            <Button variant="glow" size="sm" onClick={handleRedirect}>
               <ShoppingCart className="h-4 w-4" />
               Add to Cart
             </Button>
